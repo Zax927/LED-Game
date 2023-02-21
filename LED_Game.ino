@@ -73,6 +73,7 @@ void moveRight(int steps, bool color, bool level){
   if(color){ //blue
     temp1 = blueLights & mask; //mask off bits on other level
     temp1 = temp1 >> (steps*2); //shift over
+    temp1 = temp1 & 0b00111111; //remove ones at beginning
     temp2 = blueLights & (mask^0b11111111); //get bits from other level
     blueLights = temp1 | temp2; //combine shifted and other level
   } 
