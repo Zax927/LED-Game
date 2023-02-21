@@ -12,6 +12,14 @@ const int blueTR = 9;
 const int blueBL = 10;
 const int blueBR = 11;
 
+int red1 = A0;
+int blue1 = A1;
+int green1 = A2;
+int red2 = A3;
+int blue2 = A4;
+int green2 = A5;
+
+
 bool RTLState = LOW;
 bool RTRState = LOW;
 bool RBLState = LOW;
@@ -86,16 +94,32 @@ void moveRight(int steps, bool color, bool level){
   }
 }
 
-void moveLights(){
-  if(BTLState){moveLeft(1,1,1); delay(200);}
-  if(BTRState){moveRight(1,1,1); delay(200);}
-  if(BBLState){moveLeft(1,1,0); delay(200);}
-  if(BBRState){moveRight(1,1,0); delay(200);}
+bool checkMatch(bool color){
+  char temp1;
+  char temp2;
+  if(color){ //blue
+    temp1 = (blueLights & 0b01010101) << 1;
+    temp2 = blueLights & 0b10101010;
+    if(temp2 == temp1) return true;
+  }
+  else{ //red
+    temp1 = (redLights & 0b01010101) << 1;
+    temp2 = redLights & 0b10101010;
+    if(temp2 == temp1) return true;
+  }
+  return false;
+}
 
-  if(RTLState){moveLeft(1,0,1); delay(200);}
-  if(RTRState){moveRight(1,0,1); delay(200);}
-  if(RBLState){moveLeft(1,0,0); delay(200);}
-  if(RBRState){moveRight(1,0,0); delay(200);}
+void moveLights(){
+  if(BTLState){moveLeft(1,true,true); delay(200);}
+  if(BTRState){moveRight(1,true,true); delay(200);}
+  if(BBLState){moveLeft(1,true,false); delay(200);}
+  if(BBRState){moveRight(1,true,false); delay(200);}
+
+  if(RTLState){moveLeft(1,false,true); delay(200);}
+  if(RTRState){moveRight(1,false,true); delay(200);}
+  if(RBLState){moveLeft(1,false,false); delay(200);}
+  if(RBRState){moveRight(1,false,false); delay(200);}
 }
 
 void testButtons() {
@@ -124,11 +148,18 @@ void setup() {
   pinMode(blueTR, INPUT);
   pinMode(blueBL, INPUT);
   pinMode(blueBR, INPUT);
-
-
+  
+  pinMode(red1, OUTPUT);
+  pinMode(blue1, OUTPUT);
+  pinMode(green1, OUTPUT);
+  pinMode(red2, OUTPUT);
+  pinMode(blue2, OUTPUT);
+  pinMode(green2, OUTPUT);
+  
 
   digitalWrite(clearPin, LOW);
   digitalWrite(clearPin, HIGH);
+  
 
   writePointLEDs(0, 0);
   delay(500);
@@ -136,7 +167,13 @@ void setup() {
 
 void loop() {
   getButtons();
-  //testButtons();
+  
   moveLights();
+  
+  if(checkMatch(true)){digitalWrite(blue1, HIGH);}
+  else {digitalWrite(blue1, LOW);}
+  if(checkMatch(false)){digitalWrite(red2, HIGH);}
+  else {digitalWrite(red2, LOW);}
+  
   writePointLEDs(redLights, blueLights);
 }
