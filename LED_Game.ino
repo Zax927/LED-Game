@@ -31,7 +31,17 @@ void writePointLEDs(int redPoints, int bluePoints){
   digitalWrite(latchClock, HIGH);
 }
 
-void getButtons(){
+void moveLeft(int steps, bool color, bool level){
+  char mask;
+  if(level){mask = 0b10101010;} //top
+  else {mask = 0b01010101;} //bottom
+
+  if(color){} //blue
+  else {} //red
+  
+}
+
+void getButtons() {
   RTLState = digitalRead(redTL);
   RTRState = digitalRead(redTR);
   RBLState = digitalRead(redBL);
@@ -42,28 +52,28 @@ void getButtons(){
   BBRState = digitalRead(blueBR);
 }
 
-void testButtons(){
-  if(!RTLState){redLights = redLights | 0b10000000;} else {redLights = redLights & 0b01111111;}
-  if(!RTRState){redLights = redLights | 0b00100000;} else {redLights = redLights & 0b11011111;}
-  if(!RBLState){redLights = redLights | 0b00001000;} else {redLights = redLights & 0b11110111;}
-  if(!RBRState){redLights = redLights | 0b00000010;} else {redLights = redLights & 0b11111101;}
+void testButtons() {
+  if(RTLState){redLights = redLights | 0b10000000;} else {redLights = redLights & 0b01111111;}
+  if(RTRState){redLights = redLights | 0b00100000;} else {redLights = redLights & 0b11011111;}
+  if(RBLState){redLights = redLights | 0b00001000;} else {redLights = redLights & 0b11110111;}
+  if(RBRState){redLights = redLights | 0b00000010;} else {redLights = redLights & 0b11111101;}
 
-  if(!BTLState){blueLights = blueLights | 0b01000000;} else {blueLights = blueLights & 0b10111111;}
-  if(!BTRState){blueLights = blueLights | 0b00010000;} else {blueLights = blueLights & 0b11101111;}
-  if(!BBLState){blueLights = blueLights | 0b00000100;} else {blueLights = blueLights & 0b11111011;}
-  if(!BBRState){blueLights = blueLights | 0b00000001;} else {blueLights = blueLights & 0b11111110;}
+  if(BTLState){blueLights = blueLights | 0b10000000;} else {blueLights = blueLights & 0b01111111;}
+  if(BTRState){blueLights = blueLights | 0b00100000;} else {blueLights = blueLights & 0b11011111;}
+  if(BBLState){blueLights = blueLights | 0b00001000;} else {blueLights = blueLights & 0b11110111;}
+  if(BBRState){blueLights = blueLights | 0b00000010;} else {blueLights = blueLights & 0b11111101;}
 }
 
-void setTarget(){
-  
+void setTarget() {
+
 }
 
-void setup(){
+void setup() {
   pinMode(clearPin, OUTPUT);
   pinMode(shiftClock, OUTPUT);
   pinMode(latchClock, OUTPUT);
   pinMode(serialData, OUTPUT);
-  
+
   pinMode(redTL, INPUT);
   pinMode(redTR, INPUT);
   pinMode(redBL, INPUT);
@@ -73,16 +83,16 @@ void setup(){
   pinMode(blueBL, INPUT);
   pinMode(blueBR, INPUT);
 
-  
-  
-  digitalWrite(clearPin, LOW);
-  digitalWrite(clearPin, HIGH); 
 
-  writePointLEDs(0,0);
+
+  digitalWrite(clearPin, LOW);
+  digitalWrite(clearPin, HIGH);
+
+  writePointLEDs(0, 0);
   delay(500);
 }
 
-void loop(){
+void loop() {
   getButtons();
   testButtons();
   writePointLEDs(redLights, blueLights);
